@@ -1,0 +1,9 @@
+data
+faces
+wandb
+test.py
+test.ipynb
+weights/detection/mobilenet_100.pth
+weights/recognition/glint360k_cosface_r50_fp16_0.1.pth
+weights/recognition/iresnet100_backbone.pth
+weights/recognition/ms1mv3_arcface_r50_fp16.pth
