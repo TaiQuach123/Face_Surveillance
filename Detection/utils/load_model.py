@@ -1,12 +1,14 @@
 import torch
 from collections import OrderedDict
 
-def load_model(model, pretrained_path, load_to_cpu=False):
+
+def load_model(model, state_dict, load_to_cpu=False):
     new_state_dict = OrderedDict()
-    if load_to_cpu:
-        state_dict = torch.load(pretrained_path, weights_only=True, map_location='cpu')
-    else:
-        state_dict = torch.load(pretrained_path, weights_only=True)
+    if not isinstance(state_dict, OrderedDict):
+        if load_to_cpu:
+            state_dict = torch.load(state_dict, weights_only=True, map_location='cpu')
+        else:
+            state_dict = torch.load(state_dict, weights_only=True)
         
     for k in state_dict.keys():
         if k.startswith('module.'):
