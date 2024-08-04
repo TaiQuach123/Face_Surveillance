@@ -28,7 +28,7 @@ parser.add_argument('--resume_epoch', default=0, type=int, help='resume iter for
 parser.add_argument('--save_folder', default='weights/detection', help='Location to save model weights')
 parser.add_argument('--ngpu', default=1, type=int, help='gpus used for training')
 parser.add_argument('--batch_size', default=8, type=int, help='batch size for training')
-parser.add_argument('--epochs', default=1, type=int, help='maximum epochs for training')
+parser.add_argument('--epochs', default=50, type=int, help='maximum epochs for training')
 parser.add_argument('--gpu_train', default=True, help='using gpu for training')
 parser.add_argument('--pretrained_model', default=None, help='use pretrained weights for training')
 parser.add_argument('--checkpoints', default=None, help='checkpoints path (include model weights, optimizer and scheduler state dict)')
@@ -99,7 +99,7 @@ criterion = MultiBoxLoss(num_classes, 0.35, True, 0, True, 7, 0.35, False)
 if args.checkpoints is not None:
     checkpoints = torch.load(args.checkpoints, weights_only=True)
     args.resume_epoch = checkpoints['epoch']
-    net.load_state_dict(checkpoints['model_state_dict'])
+    net = load_model(net, checkpoints['model_state_dict'])
     optimizer.load_state_dict(checkpoints['optimizer_state_dict'])
     scheduler.load_state_dict(checkpoints['scheduler_state_dict'])
 
