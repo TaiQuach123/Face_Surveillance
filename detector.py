@@ -25,10 +25,10 @@ class RetinaFaceDetector():
 
         self.model.eval()
         
-    def detect_single_image(self, img_path, nms_threshold=0.4, conf_threshold=0.5, top_k = 5000):
+    def detect_single_image(self, img, nms_threshold=0.4, conf_threshold=0.5, top_k = 5000):
         resize = 1
 
-        img_raw, img, (h, w) = preprocess(img_path, self.rgb_mean, self.rgb_std)
+        img_raw, img, (h, w) = preprocess(img, self.rgb_mean, self.rgb_std)
         img = img.to(self.device)
 
         scale_bboxes = torch.Tensor([w, h, w, h])
@@ -78,21 +78,29 @@ class RetinaFaceDetector():
         landms = landms[:750, :]
         dets = np.concatenate((dets, landms), axis=1)
 
-        return dets
+        return img_raw, dets
 
 
 
-    def extract_face(self, img_raw, dets):
-        face_bboxes = dets[:, :4].astype(int)
+    def extract_faces_landms(self, img_raw, dets):
+        faces_bboxes = dets[:, :4].astype(int)
         scores = dets[:, 4]
-        face_landms = dets[:,5:].astype(int)
+        faces_landms = dets[:, 5:].reshape(-1, 5, 2) - dets[:, np.newaxis, :2]
+        faces_landms = faces_landms.reshape(-1,10).astype(int)
         facial_images = []
-        for bboxes in face_bboxes:
-            facial_image = img_raw[bboxes[1]:bboxes[3], bboxes[0]:bboxes[2], :]
+        for face_bboxes in faces_bboxes:
+            facial_image = img_raw[face_bboxes[1]:face_bboxes[3], face_bboxes[0]:face_bboxes[2], :].copy()
+            
             facial_images.append(facial_image)
         
-        return facial_images
+        return facial_images, faces_landms
 
+
+    def align_face(self, img, left_eye, right_eye):
+        angle = float(np.degrees(np.arctan2(left_eye[1] - right_eye[1], left_eye[0] - right_eye[0])))
+        img = np.array(Image.fromarray(img).rotate(angle, resample=Image.BICUBIC))
+
+        return img, angle
 
 
 
