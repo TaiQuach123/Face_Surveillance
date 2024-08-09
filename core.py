@@ -1,12 +1,17 @@
 from detector import RetinaFaceDetector
 from recognizer import ArcFaceRecognizer
 from Tracking.sort import Sort
+import torch
+import torch.backends.cudnn as cudnn
 import cv2
 import numpy as np
 
+cudnn.benchmark = True
+torch.set_grad_enabled(False)
+
 class FaceSurveillanceCore:
     def __init__(self, face_detector_name = "mobilenet", face_recognizer_name = "iresnet100", tracker_name = "sort"):
-        self.face_detector = RetinaFaceDetector(name=face_detector_name)
+        self.face_detector = RetinaFaceDetector(name=face_detector_name, pretrained_path = "weights/detection/mobilenet_100.pth")
         self.face_recognizer = ArcFaceRecognizer(name=face_recognizer_name, face_db_file='db.pkl')
         self.mot_tracker = Sort(max_age=15)
         self.trackid_to_name = {}
@@ -14,7 +19,7 @@ class FaceSurveillanceCore:
     def process_single_video(self, source):
         cap = cv2.VideoCapture(source)
         frame_width, frame_height = int(cap.get(3)), int(cap.get(4))
-        out = cv2.VideoWriter('outpy.avi', cv2.VideoWriter_fourcc(*"MJPG"), 20, (frame_width, frame_height))
+        out = cv2.VideoWriter('test_camera.avi', cv2.VideoWriter_fourcc(*"MJPG"), 30, (frame_width, frame_height))
 
         while True:
             ret, frame = cap.read()
@@ -26,21 +31,19 @@ class FaceSurveillanceCore:
             faces_bboxes = dets[:, :5]
             
             faces, _ = self.face_detector.extract_faces_landms(raw_frame, dets)
-            identity_names, cosine_scores = [], []
+            identity_names = []
             
             for face in faces:
                 name, cosine_score = self.face_recognizer.find_person(face)
                 identity_names.append(name)
-                cosine_scores.append(cosine_score)
             
 
             faces_bboxes = np.array(faces_bboxes) if len(faces_bboxes) != 0 else np.empty((0,5))
             trackers = self.mot_tracker.update(faces_bboxes)
             
             identity_names = reversed(identity_names)
-            cosine_scores = reversed(cosine_scores)
             
-            for name, tracker, score in zip(identity_names, trackers, cosine_scores):
+            for name, tracker in zip(identity_names, trackers):
                 tracker = [int(i) for i in tracker]
                 x1, y1, x2, y2, trackid = tracker
                 #print(name, '---', score, end='----')
