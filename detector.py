@@ -22,7 +22,6 @@ class RetinaFaceDetector():
             self.cfg = cfg_re50
         self.model = RetinaFace(cfg=self.cfg)
         self.model = load_model(self.model, pretrained_path).to(device)
-
         self.model.eval()
         
     def detect_single_image(self, img, nms_threshold=0.4, conf_threshold=0.5, top_k = 5000):
