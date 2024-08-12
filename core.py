@@ -57,8 +57,8 @@ class FaceSurveillanceCore:
             for name, tracker, score in zip(identity_names, trackers, scores):
                 tracker = [int(i) for i in tracker]
                 x1, y1, x2, y2, trackid = tracker
-                #print(name, '---', score, end='----')
-                #print(tracker)
+                #print(name, ' ---' , score, ' --- ', tracker)
+
                 cv2.rectangle(raw_frame, (x1, y1), (x2, y2), (0,0,255), 2)
 
                 if not self.trackid_to_name.get(trackid) and name != "unknown":
