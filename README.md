@@ -9,7 +9,7 @@
     - [Install requirements](#install-requirements)
     - [Training for Face Detection](#training-face-detection-model)
     - [Training for Face Recognition](#training-face-recognition-model)
-    - [Face Surveillance]
+    - [Face Surveillance](#face-surveillance)
 - [References](#references)
 
 ## Quick Start
