@@ -103,7 +103,7 @@ class ArcFaceRecognizer():
         return embedding.detach().cpu().numpy()[0]
 
 
-    def find_person(self, img, threshold = 0.25):
+    def find_person(self, img, threshold = 0.4):
         assert self.face_db is not None, "No Database Available"
         emb = self.create_embedding(img)
         scores = (self.embeddings @ emb.reshape(-1)) / (np.linalg.norm(self.embeddings, axis=1) * np.linalg.norm(emb))
@@ -116,7 +116,7 @@ class ArcFaceRecognizer():
             return 'unknown', scores[idx]
 
 
-    def verify(self, img_path1, img_path2, threshold = 0.3):
+    def verify(self, img_path1, img_path2, threshold = 0.4):
         embed1 = self.create_embedding(img_path1)
         embed2 = self.create_embedding(img_path2)
         score = cosine_score(embed1, embed2)

@@ -5,9 +5,9 @@ class TrainingConfig(object):
     lfw_val_txt = "data/recognition/lfw_test_pair.txt"
     classify = 'softmax'
     num_classes = 10575
-    metric = 'subcenter_arc_margin'
+    metric = 'arc_margin'
     easy_margin = False
-    loss = 'focal_loss'
+    loss = 'crossentropy'
     batch_size = 128
     warmup_iters = 0
     optim = 'sgd'
