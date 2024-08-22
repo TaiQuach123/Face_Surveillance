@@ -78,7 +78,10 @@ identities
     │   0.jpg
 .....
 ```
-Then run the notebook ``aligned_all_faces_create_embeddings.ipynb``. This will create embeddings for the faces of those people and save as a ``.pkl`` file.
+Then run the notebook ``aligned_all_faces_create_embeddings.ipynb``. This will create embeddings for the faces (aligned version) of those people and save as a ``.pkl`` file.
+
+Note: The ``identities`` folder in this repo contains only a few persons I created embeddings.
+
 ### Face Surveillance
 To run Face Surveillance system, run the following code:
 ```bash
