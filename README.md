@@ -9,6 +9,7 @@
     - [Install requirements](#install-requirements)
     - [Training for Face Detection](#training-face-detection-model)
     - [Training for Face Recognition](#training-face-recognition-model)
+    - [Create Embeddings](#create-embeddings)
     - [Face Surveillance](#face-surveillance)
 - [References](#references)
 
@@ -61,6 +62,23 @@ You can adjust arguments and configs such as network architecture, batch size, l
 
 Note that for training face recognition model, you can combine different metrics (ArcFace, SubCenter ArcFace, Sphere, ...) with different loss (CrossEntropy, FocalLoss, LabelSmooth,...). Depending on your architecture and data, those combinations may have different results.
 
+### Create Embeddings
+Before running the Face Surveillance system, you need to create embeddings for faces. Create the ``identities`` folder and organize it as follow:
+
+```
+identities          
+|
+└───name_of_person_1
+│   │   0.jpg
+|
+└───name_of_person_2
+|   │   0.jpg
+|
+└───name_of_person_3
+    │   0.jpg
+.....
+```
+Then run the notebook ``aligned_all_faces_create_embeddings.ipynb``. This will create embeddings for the faces of those people and save as a ``.pkl`` file.
 ### Face Surveillance
 To run Face Surveillance system, run the following code:
 ```bash
